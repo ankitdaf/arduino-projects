@@ -1,7 +1,7 @@
 WebClient
 =========
 
-A simple Arduino + Ethernet Shield project to send a GET request to your custom appspot Google App Engine page. 
+A simple Arduino + Ethernet Shield project to implement GET and POST requests to your custom appspot Google App Engine page. This also implements posting to a Google Docs Spreadsheet from the Arduino
 
 I use this to get information from the server, or post data from sensors to servers,for external application.
 
