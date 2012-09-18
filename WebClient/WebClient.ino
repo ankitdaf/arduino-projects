@@ -27,6 +27,10 @@ byte mac[] = { 0x90,0xA2,0xDA,0x00,0x09,0xD9};  //Replace with your Ethernet shi
  * 
  */
 
+#define APIKEY "YOUR API KEY STRING" // your cosm api key
+#define FEEDID YOUR_FEED_ID // your feed ID
+#define USERAGENT "Cosm Arduino Example" // user agent is the project name
+
 byte ip[] = { 192,168,2,8};
 byte gateway[]= {172,28,10,254};
 byte dns[]= {172,28,10,1};
@@ -34,7 +38,6 @@ byte subnet[]= {255,255,224,0};
 
 char appspotserver[] = "http://yourapp.appspot.com";
 char googleserver[] = "www.google.com";
-char formserver[]= "https://docs.google.com";
 char formkey[]= "your_form_key_here";
 
 boolean foo=false;  // variable to ensure we make a request only once
@@ -70,6 +73,7 @@ void loop()
    */
   get_request("content=get+request+from+arduino","yourapp.appspot.com");
   post_request("content=posting from arduino","yourapp.appspot.com"); 
+  // Connecting to docs.google.com won't work,connect to your own server or to the google.com instead for posting to google spreadsheets
   form_request("entry.0.single=now&entry.1.single=sensorvalue&submit=Submit","docs.google.com"); //A form with two fields
   foo=true; //toggle the variable, now won't enter the loop again  
   } 
@@ -132,6 +136,38 @@ void get_request(String data,String host)
     client.println("User-Agent: arduino-ethernet"); //Some additional headers
     client.println("Connection: close");
     client.println();
+}
+
+void cosm_push(double dataToSend)
+{
+  if (client.connect("api.Cosm.com", 80)) {
+    Serial.println("Connecting to Cosm...");
+
+    client.print("PUT /v2/feeds/");
+    client.print(FEEDID);
+    client.print(".csv HTTP/1.1\n");
+    client.print("User-Agent: ");
+    client.println(USERAGENT);
+    client.println("Host: api.cosm.com");
+
+    client.print("X-ApiKey: ");
+    client.println(APIKEY);
+    client.print("Content-Length: ");
+   // calculate the length of the sensor reading in bytes:
+    // 8 bytes for "sensor1," + number of digits of the data:
+    int thisLength = 8 + getLength(dataToSend);
+    client.println(thisLength);
+
+    // last pieces of the HTTP PUT request:
+    client.println("Content-Type: text/csv");
+    client.println("Connection: close");
+    client.println();
+
+    // here's the actual content of the PUT request:
+    client.print("sensor1,");
+    client.println(dataToSend);
+    client.println();
+  }
 }
 
 
