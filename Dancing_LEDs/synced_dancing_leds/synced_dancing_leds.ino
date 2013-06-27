@@ -6,11 +6,11 @@
  * 
  * Edited by 
  * Ankit Daftery
- * 24 June 2013
+ * 27 June 2013
  * 
  */
 
- #include "FastSPI_LED2.h"
+#include "FastSPI_LED2.h"
 
 
 /* Not used, but useful snippet */
@@ -60,7 +60,7 @@ void leds_setup()
     leds[6*i+5]=0;
   }
   LEDS.show();
-
+  /*
   // Do some random effects and wait. Just a visual cue for testing
   fadeUp();
   fadeDown();
@@ -75,17 +75,11 @@ void leds_setup()
   delay(250);
   delay(250);
   delay(250);
-
+   */
   // Handshake to sync the music with the LEDs
 
-  while(1) {
-    Serial.write('1');  // Tell the Python script we are ready to dance
-    delay(10);
-    if(Serial.available()) {  
-      char i = Serial.read(); 
-      if(i=='2') break;  // The Python script will start sending data now
-    }
-  }
+  Serial.write('1');  // Tell the Python script we are ready to dance
+
 }
 
 void loop() {
