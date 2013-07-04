@@ -112,12 +112,35 @@ void loop() {
 // Fade up the lights
 
 void fadeUp() {
+  fadeUp(0,127,15);
+}
 
-  for(int i=0;i<128;i++)
+// Fade down the lights, with minimum and maximum values, and time delay as parameters
+
+
+void fadeDown(int from,int to,int time) {
+  if(from>255) from=255;
+  if(to<0) to=0;
+  if(to>from) from=to;
+  for(int i=from;i>to-1;i--)
   {
     LEDS.setBrightness(i);
     LEDS.show();
-    delay(15);
+    delay(time);
+  }
+
+}
+// Fade up the lights, with minimum and maximum values, and time delay as parameters
+
+void fadeUp(int from,int to,int time) {
+  if(from<0) from=0;
+  if(to>255) to=255;
+  if(from>to) to=from;
+  for(int i=from;i<to+1;i++)
+  {
+    LEDS.setBrightness(i);
+    LEDS.show();
+    delay(time);
   }
 
 }
@@ -126,12 +149,7 @@ void fadeUp() {
 
 void fadeDown() {
 
-  for(int i=0;i<128;i++)
-  {
-    LEDS.setBrightness(127-i);
-    LEDS.show();
-    delay(15);
-  }
+  fadeDown(127,0,15);
 }
 
 // Circular shift the entire strip forward
